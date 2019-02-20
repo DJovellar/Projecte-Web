@@ -5,35 +5,33 @@ import bs4
 
 
 class Clientweb(object):
-    """Clientweb per la web de la EPS"""
+    """Clientweb per for openweathermap"""
 
     def __init__(self):
         super(Clientweb, self).__init__()
 
-    def descargar_html(self):
-        file = urlopen("http://www.eps.udl.cat/ca/")
-        html = file.read()
-        file.close()
-        return html
+    #Modificar url por la de la api de la web openweathermap
+    def do_request(self):
+        #https://api.openweathermap.org/data...
+        f = urlopen("http://www.eps.udl.cat/ca/")
+        data = file.read()
+        f.close()
+        return data
 
-    def buscar_activitats(self, html):
+    def process_weather(self, html):
         arbre = bs4.BeautifulSoup(html, features="lxml")
-        activitats = arbre.find_all("div", "featured-links-item")
-        activity_list = []
-        for activity in activitats:
-            title = activity.find("span", "flink-title")
-            link = activity.find("a")
-            activity_list.append((title.text, link["href"]))
-            print(title.text)
+        temperature = arbre.find("temperature")
+        weather = arbre.find("weather")
+        print(temperature["value"] + "and" + weather["value"])
 
-        return activity_list
+        return None
 
     def run(self):
         # descargar pagina web en html
-        html = self.descargar_html()
+        data = self.do_request()
 
         # buscar activitats
-        activitats  = self.buscar_activitats(html)
+        data  = self.process_weather(data)
 
         # imprimir resultat
         # print(activitats)
